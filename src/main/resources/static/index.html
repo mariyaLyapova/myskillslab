@@ -1,0 +1,2073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MySkillsLab Skills Assessment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-top: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .welcome-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .welcome-screen h2 {
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        .welcome-screen p {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .name-input {
+            margin-bottom: 30px;
+        }
+        .name-input label {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .name-input input {
+            width: 100%;
+            max-width: 300px;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+        .name-input input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 10px rgba(0,123,255,0.2);
+        }
+        .start-button {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,123,255,0.3);
+        }
+        .start-button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        .question h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .question-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        .meta-item {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #495057;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 1px solid #e9ecef;
+        }
+        .meta-item .meta-label {
+            color: #6c757d;
+            font-weight: 600;
+            margin-right: 4px;
+        }
+        .meta-item .meta-value {
+            color: #007bff;
+            font-weight: 700;
+        }
+        .meta-item.area {
+            border-left: 3px solid #28a745;
+        }
+        .meta-item.skill {
+            border-left: 3px solid #007bff;
+        }
+        .meta-item.difficulty {
+            border-left: 3px solid #ffc107;
+        }
+        .meta-item.level {
+            border-left: 3px solid #dc3545;
+        }
+        .difficulty-stars {
+            display: inline-flex;
+            margin-left: 4px;
+        }
+        .star {
+            color: #ffc107;
+            font-size: 14px;
+        }
+        .star.empty {
+            color: #e9ecef;
+        }
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border-radius: 8px;
+        }
+        .quiz-header h2 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .user-name {
+            color: #007bff;
+            font-weight: bold;
+        }
+        .options {
+            margin: 25px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 18px 20px;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 16px;
+            line-height: 1.5;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .option:hover {
+            background: linear-gradient(135deg, #f8f9ff, #fff);
+            border-color: #007bff;
+            transform: translateX(8px);
+            box-shadow: 0 4px 12px rgba(0,123,255,0.15);
+        }
+        .option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .option .option-letter {
+            font-weight: bold;
+            color: #007bff;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 16px 0 4px;
+            font-size: 14px;
+            border: 2px solid #90caf9;
+            flex-shrink: 0;
+        }
+        .option .option-text {
+            flex: 1;
+            color: #495057;
+            font-weight: 500;
+        }
+        .option:hover .option-letter {
+            background: linear-gradient(135deg, #1976d2, #1565c0);
+            color: white;
+            border-color: #1976d2;
+        }
+        .option input[type="radio"]:checked ~ .option-letter {
+            background: linear-gradient(135deg, #1976d2, #1565c0);
+            color: white;
+            border-color: #1976d2;
+            box-shadow: 0 2px 8px rgba(25,118,210,0.3);
+        }
+        .option input[type="radio"]:checked ~ .option-text {
+            color: #1976d2;
+            font-weight: 600;
+        }
+        .buttons {
+            text-align: center;
+            margin: 30px 0;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 10px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        .results {
+            margin-top: 20px;
+        }
+        #results-details {
+            max-height: 70vh;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        #results-details::-webkit-scrollbar {
+            width: 6px;
+        }
+        #results-details::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        #results-details::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 3px;
+        }
+        #results-details::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        .score {
+            text-align: center;
+            font-size: 24px;
+            margin: 20px 0;
+            padding: 20px;
+            background: #d4edda;
+            border-radius: 8px;
+            color: #155724;
+        }
+        .result-question {
+            margin: 8px 0;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .correct {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+        .incorrect {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+        }
+        .result-question h4 {
+            margin: 0 0 8px 0;
+            font-size: 16px;
+        }
+        .result-question p {
+            margin: 4px 0;
+            line-height: 1.4;
+        }
+        .answer-info {
+            margin: 6px 0;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .answer-info > div {
+            padding: 2px 0;
+            font-size: 13px;
+        }
+        .explanation {
+            margin-top: 8px;
+            padding: 8px;
+            background: #e2e3e5;
+            border-radius: 4px;
+            font-style: italic;
+            font-size: 13px;
+            line-height: 1.3;
+        }
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .loading {
+            text-align: center;
+            color: #666;
+        }
+        .hidden {
+            display: none;
+        }
+        .quiz-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .filter-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border: 2px solid #e9ecef;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .filter-section h3 {
+            color: #495057;
+            margin: 0 0 20px 0;
+            font-size: 1.3em;
+            text-align: center;
+            font-weight: 600;
+        }
+        .filter-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .filter-grid-bottom {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            max-width: 300px;
+        }
+        .filter-group label {
+            color: #6c757d;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+        .filter-group select {
+            width: 300px;
+            height: 25px;
+            padding: 0 16px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            background: white;
+            color: #495057;
+            font-size: 16px;
+            cursor: pointer;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            box-sizing: border-box;
+        }
+        .filter-group select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+        }
+        .filter-group select:hover {
+            border-color: #007bff;
+        }
+        .custom-multi-select {
+            position: relative;
+            width: 300px;
+        }
+        .multi-select-trigger {
+            width: 100%;
+            height: 25px;
+            padding: 0 16px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            background: white;
+            color: #495057;
+            font-size: 16px;
+            cursor: pointer;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            position: relative;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            display: flex;
+            align-items: center;
+            box-sizing: border-box;
+        }
+        .multi-select-trigger:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+        }
+        .multi-select-trigger:hover {
+            border-color: #007bff;
+        }
+        .multi-select-trigger::after {
+            content: '';
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid #6c757d;
+            transition: transform 0.3s;
+        }
+        .multi-select-trigger.open::after {
+            transform: translateY(-50%) rotate(180deg);
+        }
+        .multi-select-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            margin-top: 4px;
+            display: none;
+        }
+        .multi-select-dropdown.show {
+            display: block;
+        }
+        .multi-select-option {
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border-bottom: 1px solid #f1f1f1;
+        }
+        .multi-select-option:last-child {
+            border-bottom: none;
+        }
+        .multi-select-option:hover {
+            background: #f8f9fa;
+        }
+        .multi-select-option input[type="checkbox"] {
+            margin-right: 8px;
+            width: 14px;
+            height: 14px;
+            accent-color: #007bff;
+        }
+        .multi-select-option label {
+            flex: 1;
+            cursor: pointer;
+            color: #495057;
+            font-size: 13px;
+            font-weight: 500;
+            margin: 0;
+        }
+        .multi-select-search {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 8px;
+            border-bottom: 2px solid #e9ecef;
+            z-index: 10;
+        }
+        .multi-select-search input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        .multi-select-search input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0,123,255,0.1);
+        }
+        .multi-select-option.hidden {
+            display: none;
+        }
+        .export-stats {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 700px;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+        .export-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .export-header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            word-wrap: break-word;
+        }
+        .export-stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .export-stat-box {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        .export-stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .export-stat-label {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .export-level {
+            text-align: center;
+            font-size: 2em;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            font-weight: bold;
+            word-wrap: break-word;
+        }
+        .export-footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        .export-btn-small {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-left: 5px;
+        }
+        .export-btn-small:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(102,126,234,0.3);
+        }
+
+        /* Resize stars in difficulty filter labels */
+        #difficulty-dropdown .multi-select-option label {
+            font-size: 11px;
+        }
+        .selected-skills-text {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .filter-preview {
+            background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 15px;
+            border: 1px solid #bbdefb;
+        }
+        .filter-preview-text {
+            color: #1976d2;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+        .clear-filters-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+        /* Filter Message Styles */
+        .filter-message {
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.95em;
+            animation: fadeInMessage 0.3s ease-in;
+        }
+
+        .filter-message.info {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            color: #1976d2;
+            border: 1px solid #90caf9;
+        }
+
+        .filter-message.warning {
+            background: linear-gradient(135deg, #fff3e0, #ffcc02);
+            color: #f57c00;
+            border: 1px solid #ffb74d;
+        }
+
+        @keyframes fadeInMessage {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .clear-filters-btn:hover {
+            background: #545b62;
+        }
+        .stat-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+        .stat-number {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        .question-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+        }
+        .nav-button {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .nav-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108,117,125,0.3);
+        }
+        .nav-button:disabled {
+            background: #dee2e6;
+            color: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .nav-button.primary {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+        }
+        .nav-button.primary:hover:not(:disabled) {
+            box-shadow: 0 5px 15px rgba(0,123,255,0.3);
+        }
+        .question-counter {
+            text-align: center;
+            font-weight: bold;
+            color: #495057;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 MySkillsLab</h1>
+
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="welcome-screen">
+            <p id="quiz-description">Loading quiz information...</p>
+
+            <div class="name-input">
+                <label for="user-name">Enter your name to get started:</label>
+                <input type="text" id="user-name" placeholder="Your name" maxlength="50">
+            </div>
+
+            <!-- Filter Section -->
+            <div id="filter-section" class="filter-section hidden">
+                <h3>🔍 Filter Questions</h3>
+                <div class="filter-grid">
+                    <!-- <div class="filter-group">
+                        <label for="area-filter">Area:</label>
+                        <select id="area-filter" onchange="applyFilters()">
+                            <option value="all">All Areas</option>
+                        </select>
+                    </div> -->
+                    <div class="filter-group">
+                        <label for="area-filter">Area:</label>
+                        <div class="custom-multi-select">
+                            <div class="multi-select-trigger" id="area-trigger" tabindex="0" onclick="toggleAreaDropdown()">
+                                <span class="selected-area-text" id="selected-area-text">No Areas Selected</span>
+                            </div>
+                            <div class="multi-select-dropdown" id="area-dropdown">
+                                <div class="multi-select-search">
+                                    <input type="text" id="area-search" placeholder="Search areas..." oninput="filterAreaOptions(this.value)">
+                                </div>
+                                <div id="area-options-container">
+                                    <!-- Area options will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label for="skill-filter">Skills:</label>
+                        <div class="custom-multi-select">
+                            <div class="multi-select-trigger" id="skills-trigger" tabindex="0" onclick="toggleSkillsDropdown()">
+                                <span class="selected-skills-text" id="selected-skills-text">No Skills Selected</span>
+                            </div>
+                            <div class="multi-select-dropdown" id="skills-dropdown">
+                                <div class="multi-select-search">
+                                    <input type="text" id="skills-search" placeholder="Search skills..." oninput="filterSkillsOptions(this.value)">
+                                </div>
+                                <div id="skills-options-container">
+                                    <!-- Skill options will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-grid-bottom">
+                    <div class="filter-group">
+                        <label for="difficulty-filter">Difficulty:</label>
+                        <div class="custom-multi-select">
+                            <div class="multi-select-trigger" id="difficulty-trigger" tabindex="0" onclick="toggleDifficultyDropdown()">
+                                <span class="selected-difficulty-text" id="selected-difficulty-text">No Difficulties Selected</span>
+                            </div>
+                            <div class="multi-select-dropdown" id="difficulty-dropdown">
+                                <div class="multi-select-option">
+                                    <input type="checkbox" id="difficulty-checkbox-1" value="1" onchange="onDifficultyCheckboxChange(event)">
+                                    <label for="difficulty-checkbox-1">✦ Very Easy (1)</label>
+                                </div>
+                                <div class="multi-select-option">
+                                    <input type="checkbox" id="difficulty-checkbox-2" value="2" onchange="onDifficultyCheckboxChange(event)">
+                                    <label for="difficulty-checkbox-2">✦✦ Easy (2)</label>
+                                </div>
+                                <div class="multi-select-option">
+                                    <input type="checkbox" id="difficulty-checkbox-3" value="3" onchange="onDifficultyCheckboxChange(event)">
+                                    <label for="difficulty-checkbox-3">✦✦✦ Medium (3)</label>
+                                </div>
+                                <div class="multi-select-option">
+                                    <input type="checkbox" id="difficulty-checkbox-4" value="4" onchange="onDifficultyCheckboxChange(event)">
+                                    <label for="difficulty-checkbox-4">✦✦✦✦ Hard (4)</label>
+                                </div>
+                                <div class="multi-select-option">
+                                    <input type="checkbox" id="difficulty-checkbox-5" value="5" onchange="onDifficultyCheckboxChange(event)">
+                                    <label for="difficulty-checkbox-5">✦✦✦✦✦ Very Hard (5)</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-grid-bottom">
+                    <div class="filter-group">
+                        <label for="question-count">Question Count:</label>
+                        <select id="question-count" onchange="applyFilters()">
+                            <option value="all">All Questions</option>
+                            <option value="5">5 Questions</option>
+                            <option value="10" selected>10 Questions</option>
+                            <option value="15">15 Questions</option>
+                            <option value="20">20 Questions</option>
+                            <option value="25">25 Questions</option>
+                            <option value="30">30 Questions</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-preview">
+                    <div class="filter-preview-text" id="filter-preview">Loading available questions...</div>
+                    <button class="clear-filters-btn" onclick="clearFilters()">Clear Filters</button>
+                </div>
+
+                <!-- Filter Message Area -->
+                <div id="filter-message" class="filter-message" style="display: none;"></div>
+            </div>
+
+            <div id="quiz-stats" class="quiz-stats hidden">
+                <div class="stat-item">
+                    <div class="stat-number" id="total-questions">0</div>
+                    <div class="stat-label">Filtered Questions</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="database-total">0</div>
+                    <div class="stat-label">Database Total</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="difficulty-range">1-5</div>
+                    <div class="stat-label">Difficulty Range</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="skill-areas">0</div>
+                    <div class="stat-label">Skill Areas</div>
+                </div>
+            </div>
+
+            <button id="start-quiz-btn" class="start-button" disabled onclick="startQuiz()">
+                Start Quiz
+            </button>
+        </div>
+
+        <!-- Loading Screen -->
+        <div id="loading" class="loading hidden">
+            Loading questions...
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-container" class="hidden">
+            <div class="quiz-header">
+                <h2>Good luck, <span id="quiz-user-name" class="user-name"></span>!</h2>
+                <p>Answer the question and navigate using the buttons below.</p>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div class="question-counter">
+                    Question <span id="current-question">1</span> of <span id="total-questions-display">0</span>
+                </div>
+            </div>
+
+            <div id="single-question-container"></div>
+
+            <div class="question-navigation">
+                <button type="button" class="nav-button" id="prev-button" onclick="previousQuestion()" disabled>
+                    Previous
+                </button>
+
+                <button type="button" class="nav-button primary" id="next-button" onclick="nextQuestion()">
+                    Next
+                </button>
+
+                <button type="button" class="nav-button primary hidden" id="finish-button" onclick="finishQuiz()">
+                    Finish Quiz
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-container" class="hidden">
+            <div style="text-align: right; margin-bottom: 15px;">
+                <button type="button" class="export-btn-small" onclick="exportResultsAsPNG()">📊 Export Stats (PNG)</button>
+                <button type="button" class="export-btn-small" onclick="exportQuestionsAsPDF()">📝 Export Questions (PDF)</button>
+            </div>
+            <h2 id="results-title">Quiz Results</h2>
+            <div id="score-display"></div>
+            <div id="results-details"></div>
+            <div class="buttons">
+                <button type="button" onclick="startNewQuiz()">Take Another Quiz</button>
+            </div>
+        </div>
+        
+        <!-- Hidden container for PDF export -->
+        <div id="export-container" style="position: absolute; left: -9999px; top: 0;">
+            <div id="export-content" style="width: 750px; max-width: 750px; padding: 0; background: white; font-family: Arial, sans-serif; box-sizing: border-box;">
+                <!-- Content will be generated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let questions = [];
+        let allQuestions = []; // Store all questions for filtering
+        let userName = '';
+        let currentQuestionIndex = 0;
+        let userAnswers = {};
+        let quizResults = null; // Store quiz results for export
+
+        // Filter state
+        let availableAreas = new Set();
+        let availableSkills = new Set();
+        let selectedAreas = new Set(); // Track selected areas
+        let selectedSkills = new Set(); // Track selected skills
+        let selectedDifficulties = new Set(); // Track selected difficulties (default: none selected)
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadQuizStats();
+            setupNameInput();
+            setupDropdownClickOutside();
+        });
+
+        // Setup name input functionality
+        function setupNameInput() {
+            const nameInput = document.getElementById('user-name');
+            const startButton = document.getElementById('start-quiz-btn');
+
+            nameInput.addEventListener('input', function() {
+                const name = this.value.trim();
+                if (name.length >= 2) {
+                    startButton.disabled = false;
+                    startButton.textContent = `Start Quiz, ${name}!`;
+                } else {
+                    startButton.disabled = true;
+                    startButton.textContent = 'Start Quiz';
+                }
+            });
+
+            nameInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !startButton.disabled) {
+                    startQuiz();
+                }
+            });
+        }
+
+        // Load quiz statistics for welcome screen
+        async function loadQuizStats() {
+            try {
+                const response = await fetch('/api/skills/questions');
+                const questionsData = await response.json();
+
+                // Store all questions for filtering
+                allQuestions = questionsData;
+                questions = questionsData; // Initially show all questions
+
+                // Extract unique areas and skills for filter dropdowns
+                availableAreas = new Set(questionsData.map(q => q.area));
+                availableSkills = new Set(questionsData.map(q => q.skill));
+
+                // Populate filter dropdowns
+                populateFilterDropdowns();
+
+                const totalQuestions = questionsData.length;
+                const skills = [...availableSkills];
+                const areas = [...availableAreas];
+                const degrees = [...new Set(questionsData.map(q => q.degree))];
+                const difficulties = questionsData.map(q => q.difficulty);
+                const minDiff = Math.min(...difficulties);
+                const maxDiff = Math.max(...difficulties);
+
+                // Generate dynamic description
+                const skillText = skills.length > 3 ?
+                    `${skills.slice(0, 3).join(', ')}, and ${skills.length - 3} more` :
+                    skills.join(', ');
+
+                const areaText = areas.length > 1 ? areas.join(' and ') : areas[0];
+                const degreeText = degrees.length > 1 ? `${degrees.join(' to ')} level` : `${degrees[0]} level`;
+
+                const description = `Test your knowledge with ${totalQuestions} questions covering ${skillText} in ${areaText}. Questions range from ${degreeText} with difficulty levels ${minDiff}-${maxDiff}.`;
+
+                document.getElementById('quiz-description').textContent = description;
+
+                // Set the database total (this doesn't change with filters)
+                document.getElementById('database-total').textContent = totalQuestions;
+
+                // Don't set initial stats here - let applyFilters() handle it
+                document.getElementById('quiz-stats').classList.remove('hidden');
+                document.getElementById('filter-section').classList.remove('hidden');
+
+                // Apply initial filters (this will set the correct stats)
+                applyFilters();
+            } catch (error) {
+                console.error('Error loading quiz stats:', error);
+            }
+        }
+
+        // Start the quiz
+        function startQuiz() {
+            userName = document.getElementById('user-name').value.trim();
+            if (userName.length < 2) return;
+
+            // Check if there are any questions to show
+            if (questions.length === 0) {
+                alert('No questions match your selected filters. Please adjust your filters or select "All" to see all questions.');
+                return;
+            }
+
+            // Reset quiz state
+            currentQuestionIndex = 0;
+            userAnswers = {};
+
+            // Hide welcome screen and show loading
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('loading').classList.remove('hidden');
+
+            // Load questions
+            loadQuestions();
+        }
+
+        async function loadQuestions() {
+            try {
+                // Questions are already loaded and filtered, just start the quiz
+                startSingleQuestionMode();
+            } catch (error) {
+                document.getElementById('loading').innerHTML = 'Error loading questions: ' + error.message;
+            }
+        }
+
+        // Populate filter dropdown options
+        function populateFilterDropdowns() {
+            const areaOptionsContainer = document.getElementById('area-options-container');
+            const skillsOptionsContainer = document.getElementById('skills-options-container');
+
+            // Clear existing options
+            areaOptionsContainer.innerHTML = '';
+            skillsOptionsContainer.innerHTML = '';
+
+            // Populate areas with custom multi-select options
+            [...availableAreas].sort().forEach(area => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'multi-select-option';
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `area-checkbox-${area}`;
+                checkbox.value = area;
+                checkbox.checked = false; // Start with no areas selected
+                checkbox.addEventListener('change', onAreaCheckboxChange);
+
+                const label = document.createElement('label');
+                label.htmlFor = `area-checkbox-${area}`;
+                label.textContent = area.charAt(0).toUpperCase() + area.slice(1);
+
+                optionDiv.appendChild(checkbox);
+                optionDiv.appendChild(label);
+                areaOptionsContainer.appendChild(optionDiv);
+
+                // Don't add to selectedAreas - start empty
+            });
+
+            // Populate skills with custom multi-select options
+            [...availableSkills].sort().forEach(skill => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'multi-select-option';
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `skill-checkbox-${skill}`;
+                checkbox.value = skill;
+                checkbox.checked = false; // Start with no skills selected
+                checkbox.addEventListener('change', onSkillCheckboxChange);
+
+                const label = document.createElement('label');
+                label.htmlFor = `skill-checkbox-${skill}`;
+                label.textContent = skill.charAt(0).toUpperCase() + skill.slice(1);
+
+                optionDiv.appendChild(checkbox);
+                optionDiv.appendChild(label);
+                skillsOptionsContainer.appendChild(optionDiv);
+
+                // Don't add to selectedSkills - start empty
+            });
+
+            // Update the trigger text
+            updateAreaDropdownText();
+            updateSkillsDropdownText();
+        }
+
+        // Apply filters to questions with smart fallback logic
+        function applyFilters() {
+            const questionCount = document.getElementById('question-count').value;
+            let filteredQuestions;
+
+            if (questionCount === 'all') {
+                // Filter questions based on area, skill, and difficulty selections
+                filteredQuestions = allQuestions.filter(question => {
+                    const areaMatch = selectedAreas.size === 0 || selectedAreas.has(question.area);
+                    const skillMatch = selectedSkills.size === 0 || selectedSkills.has(question.skill);
+                    const difficultyMatch = selectedDifficulties.size === 0 || selectedDifficulties.has(question.difficulty);
+                    return areaMatch && skillMatch && difficultyMatch;
+                });
+            } else {
+                // Smart filtering to ensure exact count
+                const targetCount = parseInt(questionCount);
+                filteredQuestions = getQuestionsWithSmartFallback(targetCount);
+            }
+
+            questions = filteredQuestions;
+
+            // Update filter preview
+            updateFilterPreview();
+
+            // Update stats display
+            updateStatsDisplay();
+        }
+
+        // Smart filtering function to ensure exact question count
+        function getQuestionsWithSmartFallback(targetCount) {
+            // Clear any previous filter messages
+            clearFilterMessage();
+
+            // Try 1: Apply all filters (area, skill, and difficulty)
+            let filtered = allQuestions.filter(question => {
+                const areaMatch = selectedAreas.size === 0 || selectedAreas.has(question.area);
+                const skillMatch = selectedSkills.size === 0 || selectedSkills.has(question.skill);
+                const difficultyMatch = selectedDifficulties.size === 0 || selectedDifficulties.has(question.difficulty);
+                return areaMatch && skillMatch && difficultyMatch;
+            });
+
+            if (filtered.length >= targetCount) {
+                return shuffleArray(filtered).slice(0, targetCount);
+            }
+
+            // Try 2: Relax difficulty filter first (keep area and skill)
+            if (selectedDifficulties.size > 0 && selectedDifficulties.size < 5) {
+                filtered = allQuestions.filter(question => {
+                    const areaMatch = selectedAreas.size === 0 || selectedAreas.has(question.area);
+                    const skillMatch = selectedSkills.size === 0 || selectedSkills.has(question.skill);
+                    return areaMatch && skillMatch;
+                });
+
+                if (filtered.length >= targetCount) {
+                    showFilterMessage(`Relaxed difficulty filter to get ${targetCount} questions.`, 'info');
+                    return shuffleArray(filtered).slice(0, targetCount);
+                }
+            }
+
+            // Try 3: Relax one more filter - prioritize skill over area if both are selected
+            if (selectedSkills.size > 0 && selectedAreas.size > 0) {
+                // Try with skill filter only (+ all difficulties)
+                filtered = allQuestions.filter(question =>
+                    selectedSkills.has(question.skill)
+                );
+
+                if (filtered.length >= targetCount) {
+                    showFilterMessage(`Relaxed area and difficulty filters to get ${targetCount} questions. Using skill filter only.`, 'info');
+                    return shuffleArray(filtered).slice(0, targetCount);
+                }
+
+                // Try with area filter only (+ all difficulties)
+                filtered = allQuestions.filter(question =>
+                    selectedAreas.has(question.area)
+                );
+
+                if (filtered.length >= targetCount) {
+                    showFilterMessage(`Relaxed skill and difficulty filters to get ${targetCount} questions. Using area filter only.`, 'info');
+                    return shuffleArray(filtered).slice(0, targetCount);
+                }
+            }
+
+            // Try 4: Use only skill filter if selected
+            if (selectedSkills.size > 0) {
+                filtered = allQuestions.filter(question =>
+                    selectedSkills.has(question.skill)
+                );
+
+                if (filtered.length >= targetCount) {
+                    showFilterMessage(`Using skill filter only to get ${targetCount} questions.`, 'info');
+                    return shuffleArray(filtered).slice(0, targetCount);
+                }
+            }
+
+            // Try 5: Use only area filter if selected
+            if (selectedAreas.size > 0) {
+                filtered = allQuestions.filter(question =>
+                    selectedAreas.has(question.area)
+                );
+
+                if (filtered.length >= targetCount) {
+                    showFilterMessage(`Using area filter only to get ${targetCount} questions.`, 'info');
+                    return shuffleArray(filtered).slice(0, targetCount);
+                }
+            }
+
+            // Try 6: Use only difficulty filter if selected
+            if (selectedDifficulties.size > 0 && selectedDifficulties.size < 5) {
+                filtered = allQuestions.filter(question =>
+                    selectedDifficulties.has(question.difficulty)
+                );
+
+                if (filtered.length >= targetCount) {
+                    showFilterMessage(`Using difficulty filter only to get ${targetCount} questions.`, 'info');
+                    return shuffleArray(filtered).slice(0, targetCount);
+                }
+            }
+
+            // Try 7: Use all questions (no filters)
+            if (allQuestions.length >= targetCount) {
+                showFilterMessage(`Filters relaxed completely to get ${targetCount} questions from all available questions.`, 'warning');
+                return shuffleArray(allQuestions).slice(0, targetCount);
+            }
+
+            // Fallback: Return all available questions if we still can't get the target count
+            showFilterMessage(`Only ${allQuestions.length} questions available in total, but ${targetCount} requested.`, 'warning');
+            return shuffleArray(allQuestions);
+        }
+
+        // Show filter adjustment message to user
+        function showFilterMessage(message, type = 'info') {
+            const messageArea = document.getElementById('filter-message');
+            if (messageArea) {
+                messageArea.textContent = message;
+                messageArea.className = `filter-message ${type}`;
+                messageArea.style.display = 'block';
+
+                // Auto-hide after 5 seconds
+                setTimeout(() => clearFilterMessage(), 5000);
+            }
+        }
+
+        // Clear filter message
+        function clearFilterMessage() {
+            const messageArea = document.getElementById('filter-message');
+            if (messageArea) {
+                messageArea.style.display = 'none';
+            }
+        }
+
+        // Helper function to shuffle array
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        // Update filter preview text
+        function updateFilterPreview() {
+            const previewElement = document.getElementById('filter-preview');
+            const questionCountSelect = document.getElementById('question-count');
+            const selectedQuestionCount = questionCountSelect.value;
+
+            // Calculate total available questions matching current filters (before count limit)
+            const availableMatchingQuestions = allQuestions.filter(question => {
+                const areaMatch = selectedAreas.size === 0 || selectedAreas.has(question.area);
+                const skillMatch = selectedSkills.size === 0 || selectedSkills.has(question.skill);
+                const difficultyMatch = selectedDifficulties.size === 0 || selectedDifficulties.has(question.difficulty);
+                return areaMatch && skillMatch && difficultyMatch;
+            });
+
+            const totalAvailable = availableMatchingQuestions.length;
+            const selectedCount = selectedQuestionCount === 'all' ? totalAvailable : parseInt(selectedQuestionCount);
+            const actualCount = Math.min(selectedCount, totalAvailable);
+
+            const skillsArray = [...selectedSkills];
+
+            // Build the preview text
+            let previewText = '';
+            
+            if (selectedSkills.size === 0 && selectedAreas.size === 0 && selectedDifficulties.size === 0) {
+                // No filters applied
+                previewText = `Showing ${actualCount} of ${totalAvailable} available`;
+            } else {
+                // Filters applied - show count of selected skills/areas (excluding difficulty)
+                const filterCount = selectedSkills.size + selectedAreas.size;
+                previewText = `Showing ${actualCount} of ${totalAvailable} available (${filterCount} filters selected)`;
+            }
+
+            previewElement.textContent = previewText;
+        }
+
+        // Update stats display based on filtered questions
+        function updateStatsDisplay() {
+            const filteredSkills = [...new Set(questions.map(q => q.skill))];
+            const filteredAreas = [...new Set(questions.map(q => q.area))];
+
+            // Get difficulty range from all questions matching the current filters, not just the final question set
+            const availableQuestions = allQuestions.filter(question => {
+                const areaMatch = selectedAreas.size === 0 || selectedAreas.has(question.area);
+                const skillMatch = selectedSkills.size === 0 || selectedSkills.has(question.skill);
+                const difficultyMatch = selectedDifficulties.size === 0 || selectedDifficulties.has(question.difficulty);
+                return areaMatch && skillMatch && difficultyMatch;
+            });
+
+            const difficulties = availableQuestions.map(q => q.difficulty);
+
+            if (difficulties.length > 0) {
+                // Ensure difficulties are numbers and filter out any invalid values
+                const validDifficulties = difficulties.filter(d => d != null && !isNaN(d)).map(d => parseInt(d));
+
+                if (validDifficulties.length > 0) {
+                    const minDiff = Math.min(...validDifficulties);
+                    const maxDiff = Math.max(...validDifficulties);
+
+                    document.getElementById('total-questions').textContent = questions.length;
+                    document.getElementById('difficulty-range').textContent = `${minDiff}-${maxDiff}`;
+                    document.getElementById('skill-areas').textContent = filteredSkills.length;
+                } else {
+                    // All difficulties are invalid
+                    document.getElementById('total-questions').textContent = questions.length;
+                    document.getElementById('difficulty-range').textContent = 'N/A';
+                    document.getElementById('skill-areas').textContent = filteredSkills.length;
+                }
+            } else {
+                document.getElementById('total-questions').textContent = 0;
+                document.getElementById('difficulty-range').textContent = 'N/A';
+                document.getElementById('skill-areas').textContent = 0;
+            }
+        }
+
+        // Clear all filters
+        function clearFilters() {
+            // Select all areas
+            selectedAreas.clear();
+            availableAreas.forEach(area => selectedAreas.add(area));
+
+            // Select all skills
+            selectedSkills.clear();
+            availableSkills.forEach(skill => selectedSkills.add(skill));
+
+            // Clear difficulties (no difficulties selected)
+            selectedDifficulties.clear();
+
+            // Reset question count to default (10 questions)
+            document.getElementById('question-count').value = '10';
+
+            // Update area checkboxes
+            document.querySelectorAll('#area-options-container input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = true;
+            });
+
+            // Update skill checkboxes
+            document.querySelectorAll('#skills-options-container input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = true;
+            });
+
+            // Update difficulty checkboxes (uncheck all)
+            document.querySelectorAll('#difficulty-dropdown input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+
+            updateAreaDropdownText();
+            updateSkillsDropdownText();
+            updateDifficultyDropdownText();
+            applyFilters();
+        }
+
+        // Handle area checkbox changes
+        function onAreaCheckboxChange(event) {
+            const area = event.target.value;
+
+            if (event.target.checked) {
+                selectedAreas.add(area);
+            } else {
+                selectedAreas.delete(area);
+            }
+
+            updateAreaDropdownText();
+            applyFilters();
+        }
+
+        // Handle skill checkbox changes
+        function onSkillCheckboxChange(event) {
+            const skill = event.target.value;
+
+            if (event.target.checked) {
+                selectedSkills.add(skill);
+            } else {
+                selectedSkills.delete(skill);
+            }
+
+            updateSkillsDropdownText();
+            applyFilters();
+        }
+
+        // Handle difficulty checkbox changes
+        function onDifficultyCheckboxChange(event) {
+            const difficulty = parseInt(event.target.value);
+
+            if (event.target.checked) {
+                selectedDifficulties.add(difficulty);
+            } else {
+                selectedDifficulties.delete(difficulty);
+            }
+
+            updateDifficultyDropdownText();
+            applyFilters();
+        }
+
+        // Toggle area dropdown visibility
+        function toggleAreaDropdown() {
+            const trigger = document.getElementById('area-trigger');
+            const dropdown = document.getElementById('area-dropdown');
+            const searchInput = document.getElementById('area-search');
+
+            trigger.classList.toggle('open');
+            dropdown.classList.toggle('show');
+            
+            // Reset search and focus when opening
+            if (dropdown.classList.contains('show')) {
+                searchInput.value = '';
+                filterAreaOptions('');
+                setTimeout(() => searchInput.focus(), 100);
+            }
+        }
+
+        // Toggle skills dropdown visibility
+        function toggleSkillsDropdown() {
+            const trigger = document.getElementById('skills-trigger');
+            const dropdown = document.getElementById('skills-dropdown');
+            const searchInput = document.getElementById('skills-search');
+
+            trigger.classList.toggle('open');
+            dropdown.classList.toggle('show');
+            
+            // Reset search and focus when opening
+            if (dropdown.classList.contains('show')) {
+                searchInput.value = '';
+                filterSkillsOptions('');
+                setTimeout(() => searchInput.focus(), 100);
+            }
+        }
+
+        // Toggle difficulty dropdown visibility
+        function toggleDifficultyDropdown() {
+            const trigger = document.getElementById('difficulty-trigger');
+            const dropdown = document.getElementById('difficulty-dropdown');
+
+            trigger.classList.toggle('open');
+            dropdown.classList.toggle('show');
+        }
+
+        // Filter area options based on search query
+        function filterAreaOptions(searchQuery) {
+            const query = searchQuery.toLowerCase().trim();
+            const areaOptionsContainer = document.getElementById('area-options-container');
+            const options = areaOptionsContainer.querySelectorAll('.multi-select-option');
+            
+            options.forEach(option => {
+                const label = option.querySelector('label');
+                const text = label.textContent.toLowerCase();
+                
+                if (text.includes(query)) {
+                    option.classList.remove('hidden');
+                } else {
+                    option.classList.add('hidden');
+                }
+            });
+        }
+
+        // Filter skills options based on search query
+        function filterSkillsOptions(searchQuery) {
+            const query = searchQuery.toLowerCase().trim();
+            const skillsOptionsContainer = document.getElementById('skills-options-container');
+            const options = skillsOptionsContainer.querySelectorAll('.multi-select-option');
+            
+            options.forEach(option => {
+                const label = option.querySelector('label');
+                const text = label.textContent.toLowerCase();
+                
+                if (text.includes(query)) {
+                    option.classList.remove('hidden');
+                } else {
+                    option.classList.add('hidden');
+                }
+            });
+        }
+
+        // Update the area dropdown trigger text
+        function updateAreaDropdownText() {
+            const triggerText = document.getElementById('selected-area-text');
+            const areasArray = [...selectedAreas];
+
+            if (selectedAreas.size === 0) {
+                triggerText.textContent = 'No Areas Selected';
+            } else if (selectedAreas.size === availableAreas.size) {
+                triggerText.textContent = 'All Areas';
+            } else if (areasArray.length === 1) {
+                triggerText.textContent = areasArray[0].charAt(0).toUpperCase() + areasArray[0].slice(1);
+            } else if (areasArray.length === 2) {
+                triggerText.textContent = areasArray.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ');
+            } else {
+                const firstTwo = areasArray.slice(0, 2).map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ');
+                triggerText.textContent = `${firstTwo} +${areasArray.length - 2} more`;
+            }
+        }
+
+        // Update the skills dropdown trigger text
+        function updateSkillsDropdownText() {
+            const triggerText = document.getElementById('selected-skills-text');
+            const skillsArray = [...selectedSkills];
+
+            if (selectedSkills.size === 0) {
+                triggerText.textContent = 'No Skills Selected';
+            } else if (selectedSkills.size === availableSkills.size) {
+                triggerText.textContent = 'All Skills';
+            } else if (skillsArray.length === 1) {
+                triggerText.textContent = skillsArray[0].charAt(0).toUpperCase() + skillsArray[0].slice(1);
+            } else if (skillsArray.length === 2) {
+                triggerText.textContent = skillsArray.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ');
+            } else {
+                const firstTwo = skillsArray.slice(0, 2).map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ');
+                triggerText.textContent = `${firstTwo} +${skillsArray.length - 2} more`;
+            }
+        }
+
+        // Update the difficulty dropdown trigger text
+        function updateDifficultyDropdownText() {
+            const triggerText = document.getElementById('selected-difficulty-text');
+            const difficultiesArray = [...selectedDifficulties].sort((a, b) => a - b);
+
+            if (selectedDifficulties.size === 0) {
+                triggerText.textContent = 'No Difficulties Selected';
+            } else if (selectedDifficulties.size === 5) {
+                triggerText.textContent = 'All Difficulties';
+            } else if (difficultiesArray.length === 1) {
+                triggerText.textContent = `Difficulty ${difficultiesArray[0]}`;
+            } else if (difficultiesArray.length === 2) {
+                triggerText.textContent = `Difficulties ${difficultiesArray.join(', ')}`;
+            } else {
+                const firstTwo = difficultiesArray.slice(0, 2).join(', ');
+                triggerText.textContent = `Difficulties ${firstTwo} +${difficultiesArray.length - 2} more`;
+            }
+        }
+
+        // Setup click outside handler for dropdown
+        function setupDropdownClickOutside() {
+            document.addEventListener('click', function(event) {
+                // Handle area dropdown
+                const areaTrigger = document.getElementById('area-trigger');
+                const areaDropdown = document.getElementById('area-dropdown');
+                const areaCustomSelect = areaTrigger?.closest('.custom-multi-select');
+
+                if (areaCustomSelect && !areaCustomSelect.contains(event.target)) {
+                    areaTrigger.classList.remove('open');
+                    areaDropdown.classList.remove('show');
+                }
+
+                // Handle skills dropdown
+                const skillsTrigger = document.getElementById('skills-trigger');
+                const skillsDropdown = document.getElementById('skills-dropdown');
+                const skillsCustomSelect = skillsTrigger?.closest('.custom-multi-select');
+
+                if (skillsCustomSelect && !skillsCustomSelect.contains(event.target)) {
+                    skillsTrigger.classList.remove('open');
+                    skillsDropdown.classList.remove('show');
+                }
+
+                // Handle difficulty dropdown
+                const difficultyTrigger = document.getElementById('difficulty-trigger');
+                const difficultyDropdown = document.getElementById('difficulty-dropdown');
+                const difficultyCustomSelect = difficultyTrigger?.closest('.custom-multi-select');
+
+                if (difficultyCustomSelect && !difficultyCustomSelect.contains(event.target)) {
+                    difficultyTrigger.classList.remove('open');
+                    difficultyDropdown.classList.remove('show');
+                }
+            });
+
+            // Also close on Escape key
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    const areaTrigger = document.getElementById('area-trigger');
+                    const areaDropdown = document.getElementById('area-dropdown');
+                    areaTrigger.classList.remove('open');
+                    areaDropdown.classList.remove('show');
+
+                    const skillsTrigger = document.getElementById('skills-trigger');
+                    const skillsDropdown = document.getElementById('skills-dropdown');
+                    skillsTrigger.classList.remove('open');
+                    skillsDropdown.classList.remove('show');
+
+                    const difficultyTrigger = document.getElementById('difficulty-trigger');
+                    const difficultyDropdown = document.getElementById('difficulty-dropdown');
+                    difficultyTrigger.classList.remove('open');
+                    difficultyDropdown.classList.remove('show');
+                }
+            });
+        }
+
+        function startSingleQuestionMode() {
+            // Set user name in quiz header
+            document.getElementById('quiz-user-name').textContent = userName;
+            document.getElementById('total-questions-display').textContent = questions.length;
+
+            // Show first question
+            displayCurrentQuestion();
+
+            // Show quiz container
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('results-container').classList.add('hidden');
+        }
+
+        function displayCurrentQuestion() {
+            const question = questions[currentQuestionIndex];
+            const container = document.getElementById('single-question-container');
+
+            // Update progress bar
+            const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100;
+            document.getElementById('progress-fill').style.width = progressPercentage + '%';
+
+            // Update question counter
+            document.getElementById('current-question').textContent = currentQuestionIndex + 1;
+
+            // Get previously selected answer
+            const previousAnswer = userAnswers[question.id];
+
+            // Generate difficulty stars
+            const stars = [];
+            for (let i = 1; i <= 5; i++) {
+                stars.push(i <= question.difficulty ? '★' : '☆');
+            }
+
+            container.innerHTML = `
+                <div class="question">
+                    <div class="question-meta">
+                        <div class="meta-item area">
+                            <span class="meta-label">Area:</span>
+                            <span class="meta-value">${question.area}</span>
+                        </div>
+                        <div class="meta-item skill">
+                            <span class="meta-label">Skill:</span>
+                            <span class="meta-value">${question.skill}</span>
+                        </div>
+                        <div class="meta-item difficulty">
+                            <span class="meta-label">Difficulty:</span>
+                            <span class="meta-value">${question.difficulty}/5</span>
+                            <span class="difficulty-stars">${stars.join('')}</span>
+                        </div>
+                        <div class="meta-item level">
+                            <span class="meta-label">Level:</span>
+                            <span class="meta-value">${question.degree}</span>
+                        </div>
+                    </div>
+                    <h3>${question.question}</h3>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="current_question" value="A" ${previousAnswer === 'A' ? 'checked' : ''}>
+                            <div class="option-letter">A</div>
+                            <div class="option-text">${question.optionA}</div>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="current_question" value="B" ${previousAnswer === 'B' ? 'checked' : ''}>
+                            <div class="option-letter">B</div>
+                            <div class="option-text">${question.optionB}</div>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="current_question" value="C" ${previousAnswer === 'C' ? 'checked' : ''}>
+                            <div class="option-letter">C</div>
+                            <div class="option-text">${question.optionC}</div>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="current_question" value="D" ${previousAnswer === 'D' ? 'checked' : ''}>
+                            <div class="option-letter">D</div>
+                            <div class="option-text">${question.optionD}</div>
+                        </label>
+                    </div>
+                </div>
+            `;
+
+            // Update navigation buttons
+            updateNavigationButtons();
+
+            // Add event listeners to radio buttons to save answers
+            const radioButtons = container.querySelectorAll('input[name="current_question"]');
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.checked) {
+                        userAnswers[question.id] = this.value;
+                    }
+                });
+            });
+        }
+
+        function updateNavigationButtons() {
+            const prevButton = document.getElementById('prev-button');
+            const nextButton = document.getElementById('next-button');
+            const finishButton = document.getElementById('finish-button');
+
+            // Update Previous button
+            prevButton.disabled = currentQuestionIndex === 0;
+
+            // Update Next/Finish buttons
+            if (currentQuestionIndex === questions.length - 1) {
+                nextButton.classList.add('hidden');
+                finishButton.classList.remove('hidden');
+            } else {
+                nextButton.classList.remove('hidden');
+                finishButton.classList.add('hidden');
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayCurrentQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                displayCurrentQuestion();
+            }
+        }
+
+        async function finishQuiz() {
+            // Check if all questions are answered
+            const unansweredQuestions = questions.filter(q => !userAnswers[q.id]);
+
+            if (unansweredQuestions.length > 0) {
+                const proceed = confirm(`You have ${unansweredQuestions.length} unanswered question(s). Do you want to finish the quiz anyway?`);
+                if (!proceed) return;
+            }
+
+            try {
+                const response = await fetch('/api/skills/check', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userAnswers)
+                });
+
+                const results = await response.json();
+                displayResults(results);
+            } catch (error) {
+                alert('Error submitting answers: ' + error.message);
+            }
+        }
+
+        function displayResults(results) {
+            // Store results globally for export
+            quizResults = results;
+            
+            const scoreDisplay = document.getElementById('score-display');
+            const resultsDetails = document.getElementById('results-details');
+            const resultsTitle = document.getElementById('results-title');
+
+            // Personalized results title
+            resultsTitle.textContent = `Great job, ${userName}! Here are your results:`;
+
+            // Display score with encouragement
+            const percentage = Math.round(results.score);
+            let encouragement = '';
+            if (percentage >= 90) encouragement = '🏆 Excellent work!';
+            else if (percentage >= 75) encouragement = '👏 Well done!';
+            else if (percentage >= 60) encouragement = '👍 Good effort!';
+            else encouragement = '📚 Keep learning!';
+
+            scoreDisplay.innerHTML = `
+                <div class="score">
+                    ${encouragement}<br>
+                    Score: ${results.correctAnswers}/${results.totalQuestions}
+                    (${percentage}%)
+                </div>
+            `;
+
+            // Display detailed results with grid layout
+            resultsDetails.innerHTML = '<div class="results-grid"></div>';
+            const resultsGrid = resultsDetails.querySelector('.results-grid');
+
+            results.questionResults.forEach((result, index) => {
+                const resultDiv = document.createElement('div');
+                resultDiv.className = `result-question ${result.isCorrect ? 'correct' : 'incorrect'}`;
+
+                const userAnswerText = getAnswerText(result, result.userAnswer);
+                const correctAnswerText = getAnswerText(result, result.correctAnswer);
+
+                // Truncate long questions for compact display
+                const truncatedQuestion = result.question.length > 120 ?
+                    result.question.substring(0, 120) + '...' : result.question;
+
+                resultDiv.innerHTML = `
+                    <h4>Q${index + 1}: ${result.isCorrect ? '✓' : '✗'}</h4>
+                    <p><strong>${truncatedQuestion}</strong></p>
+                    <div class="answer-info">
+                        <div>Your: ${result.userAnswer || 'No answer'} ${userAnswerText ? `- ${userAnswerText}` : ''}</div>
+                        <div>Correct: ${result.correctAnswer} - ${correctAnswerText}</div>
+                    </div>
+                    <div class="explanation">
+                        ${result.explanation}
+                    </div>
+                `;
+
+                resultsGrid.appendChild(resultDiv);
+            });
+
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('results-container').classList.remove('hidden');
+        }
+
+        function getAnswerText(result, answerKey) {
+            switch(answerKey) {
+                case 'A': return result.optionA;
+                case 'B': return result.optionB;
+                case 'C': return result.optionC;
+                case 'D': return result.optionD;
+                default: return '';
+            }
+        }
+
+        async function exportResultsAsPNG() {
+            if (!quizResults) {
+                alert('No quiz results available to export');
+                return;
+            }
+            
+            const exportContent = document.getElementById('export-content');
+            
+            // Use actual quiz results
+            const totalQuestions = quizResults.totalQuestions;
+            const correctAnswers = quizResults.correctAnswers;
+            const incorrectAnswers = totalQuestions - correctAnswers;
+            const percentage = Math.round(quizResults.score);
+            
+            // Calculate average difficulty only from correctly answered questions
+            const correctlyAnsweredQuestions = quizResults.questionResults.filter(q => q.isCorrect);
+            const avgDifficulty = correctlyAnsweredQuestions.length > 0 
+                ? Math.round(correctlyAnsweredQuestions.reduce((sum, q) => sum + q.difficulty, 0) / correctlyAnsweredQuestions.length)
+                : 0;
+            
+            // Determine level based on score and difficulty
+            let level = '';
+            if (percentage >= 90 && avgDifficulty >= 4) level = '🏆 Expert Master';
+            else if (percentage >= 90) level = '⭐ Expert';
+            else if (percentage >= 75 && avgDifficulty >= 3.5) level = '🎯 Advanced Pro';
+            else if (percentage >= 75) level = '📚 Advanced';
+            else if (percentage >= 60) level = '✨ Intermediate';
+            else if (percentage >= 40) level = '🌱 Beginner+';
+            else level = '🔰 Beginner';
+            
+            // Generate export content
+            const currentDate = new Date().toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            exportContent.innerHTML = `
+                <div class="export-stats" style="max-width: 700px; margin: 0 auto; box-sizing: border-box;">
+                    <div class="export-header">
+                        <h1>🎯 MySkillsLab Results</h1>
+                        <p style="font-size: 1.3em; margin: 10px 0; word-wrap: break-word;">${userName}</p>
+                        <p style="opacity: 0.8;">${currentDate}</p>
+                    </div>
+                    
+                    <div class="export-level">
+                        ${level}
+                    </div>
+                    
+                    <div class="export-stats-grid">
+                        <div class="export-stat-box">
+                            <div class="export-stat-label">Score</div>
+                            <div class="export-stat-number">${percentage}%</div>
+                            <div style="font-size: 1.1em;">${correctAnswers}/${totalQuestions}</div>
+                        </div>
+                        <div class="export-stat-box">
+                            <div class="export-stat-label">Avg Difficulty</div>
+                            <div class="export-stat-number">${avgDifficulty}</div>
+                            <div style="font-size: 1.1em;">${'★'.repeat(Math.round(avgDifficulty))}${'☆'.repeat(5 - Math.round(avgDifficulty))}</div>
+                        </div>
+                        <div class="export-stat-box">
+                            <div class="export-stat-label">✓ Correct</div>
+                            <div class="export-stat-number" style="color: #4ade80;">${correctAnswers}</div>
+                        </div>
+                        <div class="export-stat-box">
+                            <div class="export-stat-label">✗ Incorrect</div>
+                            <div class="export-stat-number" style="color: #f87171;">${incorrectAnswers}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="export-footer">
+                        <p>Keep learning and improving! 📚</p>
+                        <p style="font-size: 0.8em;">Generated by MySkillsLab Skills Assessment</p>
+                    </div>
+                </div>
+            `;
+            
+            // Use html2canvas to convert to PNG
+            try {
+                const canvas = await html2canvas(exportContent, {
+                    backgroundColor: '#ffffff',
+                    scale: 2,
+                    logging: false,
+                    width: 750,
+                    windowWidth: 750
+                });
+                
+                // Convert canvas to blob and download
+                canvas.toBlob(function(blob) {
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    const filename = `MySkillsLab_${userName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.png`;
+                    link.download = filename;
+                    link.href = url;
+                    link.click();
+                    URL.revokeObjectURL(url);
+                });
+            } catch (error) {
+                alert('Error generating PNG: ' + error.message);
+            }
+        }
+
+        async function exportQuestionsAsPDF() {
+            if (!quizResults) {
+                alert('No quiz results available to export');
+                return;
+            }
+            
+            const exportContent = document.getElementById('export-content');
+            
+            // Generate export content with all questions and answers
+            const currentDate = new Date().toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            let questionsHTML = '';
+            quizResults.questionResults.forEach((result, index) => {
+                const isCorrect = result.isCorrect;
+                const statusIcon = isCorrect ? '✅' : '❌';
+                const statusColor = isCorrect ? '#4ade80' : '#f87171';
+                
+                questionsHTML += `
+                    <div style="margin-bottom: 10px; padding: 8px; background: #f9fafb; border-radius: 4px; border-left: 3px solid ${statusColor}; page-break-inside: avoid; font-size: 0.8em; word-wrap: break-word; overflow-wrap: break-word;">
+                        <div style="margin-bottom: 5px; word-wrap: break-word; overflow-wrap: break-word;">
+                            <span style="font-size: 1em; margin-right: 4px;">${statusIcon}</span>
+                            <strong style="font-size: 0.95em;">Q${index + 1}:</strong>
+                            <span style="margin-left: 4px; line-height: 1.3;">${result.question}</span>
+                        </div>
+                        
+                        <div style="margin: 5px 0 5px 15px;">
+                            <div style="padding: 3px 6px; margin: 2px 0; background: ${result.correctAnswer === 'A' ? '#d1fae5' : (result.userAnswer === 'A' ? '#fee2e2' : 'white')}; border-radius: 3px; line-height: 1.3; word-wrap: break-word; overflow-wrap: break-word;">
+                                <strong>A.</strong> ${result.optionA}
+                            </div>
+                            <div style="padding: 3px 6px; margin: 2px 0; background: ${result.correctAnswer === 'B' ? '#d1fae5' : (result.userAnswer === 'B' ? '#fee2e2' : 'white')}; border-radius: 3px; line-height: 1.3; word-wrap: break-word; overflow-wrap: break-word;">
+                                <strong>B.</strong> ${result.optionB}
+                            </div>
+                            <div style="padding: 3px 6px; margin: 2px 0; background: ${result.correctAnswer === 'C' ? '#d1fae5' : (result.userAnswer === 'C' ? '#fee2e2' : 'white')}; border-radius: 3px; line-height: 1.3; word-wrap: break-word; overflow-wrap: break-word;">
+                                <strong>C.</strong> ${result.optionC}
+                            </div>
+                            <div style="padding: 3px 6px; margin: 2px 0; background: ${result.correctAnswer === 'D' ? '#d1fae5' : (result.userAnswer === 'D' ? '#fee2e2' : 'white')}; border-radius: 3px; line-height: 1.3; word-wrap: break-word; overflow-wrap: break-word;">
+                                <strong>D.</strong> ${result.optionD}
+                            </div>
+                        </div>
+                        
+                        <div style="margin: 5px 0 5px 15px; display: flex; gap: 6px; flex-wrap: wrap;">
+                            <span style="padding: 2px 6px; background: #e0f2fe; border-radius: 3px; font-size: 0.9em;">
+                                <strong style="color: #0369a1;">✓</strong> ${result.correctAnswer}
+                            </span>
+                            ${result.userAnswer ? `
+                                <span style="padding: 2px 6px; background: ${isCorrect ? '#d1fae5' : '#fee2e2'}; border-radius: 3px; font-size: 0.9em;">
+                                    <strong style="color: ${isCorrect ? '#15803d' : '#991b1b'};">You:</strong> ${result.userAnswer}
+                                </span>
+                            ` : ''}
+                            <span style="padding: 2px 6px; background: #f3f4f6; border-radius: 3px; color: #6b7280; font-size: 0.85em;">
+                                ${result.area} | ${result.skill} | ${'★'.repeat(result.difficulty)}
+                            </span>
+                        </div>
+                        
+                        <div style="margin: 5px 0 0 15px; padding: 4px 6px; background: #fef3c7; border-radius: 3px; font-style: italic; line-height: 1.3; word-wrap: break-word; overflow-wrap: break-word;">
+                            <strong>💡</strong> ${result.explanation}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            exportContent.innerHTML = `
+                <div style="padding: 15px; background: white; font-family: Arial, sans-serif; max-width: 100%; word-wrap: break-word; overflow-wrap: break-word;">
+                    <div style="text-align: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #667eea;">
+                        <h1 style="margin: 0; color: #667eea; font-size: 1.4em;">📚 MySkillsLab - Questions & Answers</h1>
+                        <p style="font-size: 0.9em; margin: 5px 0; color: #333;">${userName} | ${currentDate} | Score: ${quizResults.correctAnswers}/${quizResults.totalQuestions} (${Math.round(quizResults.score)}%)</p>
+                    </div>
+                    
+                    ${questionsHTML}
+                    
+                    <div style="text-align: center; margin-top: 12px; padding-top: 8px; border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 0.75em;">
+                        <p style="margin: 0;">Generated by MySkillsLab Skills Assessment</p>
+                    </div>
+                </div>
+            `;
+            
+            // Use html2pdf to convert to PDF
+            try {
+                const filename = `MySkillsLab_Questions_${userName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+                const opt = {
+                    margin: [8, 8, 8, 8],
+                    filename: filename,
+                    image: { type: 'jpeg', quality: 0.95 },
+                    html2canvas: { scale: 2, letterRendering: true },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                    pagebreak: { mode: ['avoid-all', 'css', 'legacy'], before: '.page-break' }
+                };
+                await html2pdf().set(opt).from(exportContent).save();
+            } catch (error) {
+                alert('Error generating PDF: ' + error.message);
+            }
+        }
+
+        function startNewQuiz() {
+            // Reset to welcome screen
+            document.getElementById('results-container').classList.add('hidden');
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('welcome-screen').classList.remove('hidden');
+
+            // Clear previous name and reset button
+            const nameInput = document.getElementById('user-name');
+            const startButton = document.getElementById('start-quiz-btn');
+            nameInput.value = '';
+            startButton.disabled = true;
+            startButton.textContent = 'Start Quiz';
+            nameInput.focus();
+
+            // Reset quiz state
+            currentQuestionIndex = 0;
+            userAnswers = {};
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</body>
+</html>
