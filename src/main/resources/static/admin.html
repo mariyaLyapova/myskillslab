@@ -1078,10 +1078,26 @@
             }
         }
 
+        // Helper function for case-insensitive filtering
+        function hasIgnoreCase(selectedArray, value) {
+            if (!value) return false;
+            const lowerValue = value.toLowerCase();
+            return selectedArray.some(item => item.toLowerCase() === lowerValue);
+        }
+
         // Populate filter dropdowns with unique values
         function populateFilterDropdowns() {
-            // Get unique areas
-            const areas = [...new Set(allQuestions.map(q => q.area).filter(a => a))].sort();
+            // Get unique areas (case-insensitive)
+            const areaMap = new Map();
+            allQuestions.forEach(q => {
+                if (q.area) {
+                    const lowerArea = q.area.toLowerCase();
+                    if (!areaMap.has(lowerArea)) {
+                        areaMap.set(lowerArea, q.area);
+                    }
+                }
+            });
+            const areas = [...areaMap.values()].sort();
             const areaDropdown = document.getElementById('areaDropdown');
             areaDropdown.innerHTML = `
                 <div class="filter-search">
@@ -1097,8 +1113,17 @@
                 </div>
             `;
 
-            // Get unique skills
-            const skills = [...new Set(allQuestions.map(q => q.skill).filter(s => s))].sort();
+            // Get unique skills (case-insensitive)
+            const skillMap = new Map();
+            allQuestions.forEach(q => {
+                if (q.skill) {
+                    const lowerSkill = q.skill.toLowerCase();
+                    if (!skillMap.has(lowerSkill)) {
+                        skillMap.set(lowerSkill, q.skill);
+                    }
+                }
+            });
+            const skills = [...skillMap.values()].sort();
             const skillDropdown = document.getElementById('skillDropdown');
             skillDropdown.innerHTML = `
                 <div class="filter-search">
@@ -1192,9 +1217,9 @@
                     (q.correctAnswer && q.correctAnswer.toLowerCase().includes(searchTerm)) ||
                     (q.explanation && q.explanation.toLowerCase().includes(searchTerm));
                 
-                // Checkbox filters (if nothing selected, show all)
-                const matchesArea = selectedAreas.length === 0 || selectedAreas.includes(q.area);
-                const matchesSkill = selectedSkills.length === 0 || selectedSkills.includes(q.skill);
+                // Checkbox filters (if nothing selected, show all) - case insensitive
+                const matchesArea = selectedAreas.length === 0 || hasIgnoreCase(selectedAreas, q.area);
+                const matchesSkill = selectedSkills.length === 0 || hasIgnoreCase(selectedSkills, q.skill);
                 const matchesDifficulty = selectedDifficulties.length === 0 || selectedDifficulties.includes(q.difficulty);
                 
                 return matchesSearch && matchesArea && matchesSkill && matchesDifficulty;

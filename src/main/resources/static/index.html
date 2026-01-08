@@ -948,6 +948,18 @@
         let selectedSkills = new Set(); // Track selected skills
         let selectedDifficulties = new Set(); // Track selected difficulties (default: none selected)
 
+        // Helper function for case-insensitive set matching
+        function hasIgnoreCase(set, value) {
+            if (!value) return false;
+            const lowerValue = value.toLowerCase();
+            for (const item of set) {
+                if (item.toLowerCase() === lowerValue) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
             loadQuizStats();
@@ -988,9 +1000,30 @@
                 allQuestions = questionsData;
                 questions = questionsData; // Initially show all questions
 
-                // Extract unique areas and skills for filter dropdowns
-                availableAreas = new Set(questionsData.map(q => q.area));
-                availableSkills = new Set(questionsData.map(q => q.skill));
+                // Extract unique areas and skills for filter dropdowns (case-insensitive)
+                const areaMap = new Map();
+                const skillMap = new Map();
+
+                questionsData.forEach(q => {
+                    // For areas - use the first occurrence's casing as canonical
+                    if (q.area) {
+                        const lowerArea = q.area.toLowerCase();
+                        if (!areaMap.has(lowerArea)) {
+                            areaMap.set(lowerArea, q.area);
+                        }
+                    }
+
+                    // For skills - use the first occurrence's casing as canonical
+                    if (q.skill) {
+                        const lowerSkill = q.skill.toLowerCase();
+                        if (!skillMap.has(lowerSkill)) {
+                            skillMap.set(lowerSkill, q.skill);
+                        }
+                    }
+                });
+
+                availableAreas = new Set(areaMap.values());
+                availableSkills = new Set(skillMap.values());
 
                 // Populate filter dropdowns
                 populateFilterDropdowns();
@@ -1129,8 +1162,8 @@
             if (questionCount === 'all') {
                 // Filter questions based on area, skill, and difficulty selections
                 filteredQuestions = allQuestions.filter(question => {
-                    const areaMatch = selectedAreas.size === 0 || selectedAreas.has(question.area);
-                    const skillMatch = selectedSkills.size === 0 || selectedSkills.has(question.skill);
+                    const areaMatch = selectedAreas.size === 0 || hasIgnoreCase(selectedAreas, question.area);
+                    const skillMatch = selectedSkills.size === 0 || hasIgnoreCase(selectedSkills, question.skill);
                     const difficultyMatch = selectedDifficulties.size === 0 || selectedDifficulties.has(question.difficulty);
                     return areaMatch && skillMatch && difficultyMatch;
                 });
@@ -1156,8 +1189,8 @@
 
             // Try 1: Apply all filters (area, skill, and difficulty)
             let filtered = allQuestions.filter(question => {
-                const areaMatch = selectedAreas.size === 0 || selectedAreas.has(question.area);
-                const skillMatch = selectedSkills.size === 0 || selectedSkills.has(question.skill);
+                const areaMatch = selectedAreas.size === 0 || hasIgnoreCase(selectedAreas, question.area);
+                const skillMatch = selectedSkills.size === 0 || hasIgnoreCase(selectedSkills, question.skill);
                 const difficultyMatch = selectedDifficulties.size === 0 || selectedDifficulties.has(question.difficulty);
                 return areaMatch && skillMatch && difficultyMatch;
             });
@@ -1169,8 +1202,8 @@
             // Try 2: Relax difficulty filter first (keep area and skill)
             if (selectedDifficulties.size > 0 && selectedDifficulties.size < 5) {
                 filtered = allQuestions.filter(question => {
-                    const areaMatch = selectedAreas.size === 0 || selectedAreas.has(question.area);
-                    const skillMatch = selectedSkills.size === 0 || selectedSkills.has(question.skill);
+                    const areaMatch = selectedAreas.size === 0 || hasIgnoreCase(selectedAreas, question.area);
+                    const skillMatch = selectedSkills.size === 0 || hasIgnoreCase(selectedSkills, question.skill);
                     return areaMatch && skillMatch;
                 });
 
@@ -1184,7 +1217,7 @@
             if (selectedSkills.size > 0 && selectedAreas.size > 0) {
                 // Try with skill filter only (+ all difficulties)
                 filtered = allQuestions.filter(question =>
-                    selectedSkills.has(question.skill)
+                    hasIgnoreCase(selectedSkills, question.skill)
                 );
 
                 if (filtered.length >= targetCount) {
@@ -1194,7 +1227,7 @@
 
                 // Try with area filter only (+ all difficulties)
                 filtered = allQuestions.filter(question =>
-                    selectedAreas.has(question.area)
+                    hasIgnoreCase(selectedAreas, question.area)
                 );
 
                 if (filtered.length >= targetCount) {
@@ -1206,7 +1239,7 @@
             // Try 4: Use only skill filter if selected
             if (selectedSkills.size > 0) {
                 filtered = allQuestions.filter(question =>
-                    selectedSkills.has(question.skill)
+                    hasIgnoreCase(selectedSkills, question.skill)
                 );
 
                 if (filtered.length >= targetCount) {
@@ -1218,7 +1251,7 @@
             // Try 5: Use only area filter if selected
             if (selectedAreas.size > 0) {
                 filtered = allQuestions.filter(question =>
-                    selectedAreas.has(question.area)
+                    hasIgnoreCase(selectedAreas, question.area)
                 );
 
                 if (filtered.length >= targetCount) {
@@ -1289,8 +1322,8 @@
 
             // Calculate total available questions matching current filters (before count limit)
             const availableMatchingQuestions = allQuestions.filter(question => {
-                const areaMatch = selectedAreas.size === 0 || selectedAreas.has(question.area);
-                const skillMatch = selectedSkills.size === 0 || selectedSkills.has(question.skill);
+                const areaMatch = selectedAreas.size === 0 || hasIgnoreCase(selectedAreas, question.area);
+                const skillMatch = selectedSkills.size === 0 || hasIgnoreCase(selectedSkills, question.skill);
                 const difficultyMatch = selectedDifficulties.size === 0 || selectedDifficulties.has(question.difficulty);
                 return areaMatch && skillMatch && difficultyMatch;
             });
@@ -1323,8 +1356,8 @@
 
             // Get difficulty range from all questions matching the current filters, not just the final question set
             const availableQuestions = allQuestions.filter(question => {
-                const areaMatch = selectedAreas.size === 0 || selectedAreas.has(question.area);
-                const skillMatch = selectedSkills.size === 0 || selectedSkills.has(question.skill);
+                const areaMatch = selectedAreas.size === 0 || hasIgnoreCase(selectedAreas, question.area);
+                const skillMatch = selectedSkills.size === 0 || hasIgnoreCase(selectedSkills, question.skill);
                 const difficultyMatch = selectedDifficulties.size === 0 || selectedDifficulties.has(question.difficulty);
                 return areaMatch && skillMatch && difficultyMatch;
             });
