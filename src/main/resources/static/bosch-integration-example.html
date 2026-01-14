@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MySkillsLab - Bosch Frontend Kit Example</title>
+
+    <!-- Bosch Frontend Kit CSS -->
+    <link rel="stylesheet" href="css/frontend-kit.complete.css">
+</head>
+<body>
+    <div class="bds-grid">
+        <!-- Header with Bosch branding -->
+        <header class="bds-header">
+            <div class="bds-container">
+                <h1 class="bds-heading bds-heading--primary">MySkillsLab</h1>
+                <p class="bds-text">Powered by Bosch Frontend Kit</p>
+            </div>
+        </header>
+
+        <!-- Main content area -->
+        <main class="bds-container bds-spacing-v-lg">
+            <!-- Example Bosch button -->
+            <button class="bds-button bds-button--primary">
+                Start Quiz
+            </button>
+
+            <!-- Example card component -->
+            <div class="bds-card bds-spacing-v-md">
+                <div class="bds-card__header">
+                    <h2 class="bds-heading bds-heading--secondary">Welcome to MySkillsLab</h2>
+                </div>
+                <div class="bds-card__content">
+                    <p class="bds-text">This example shows how to integrate the Bosch Frontend Kit into your Spring Boot application.</p>
+                </div>
+            </div>
+
+            <!-- Example form components -->
+            <form class="bds-form bds-spacing-v-md">
+                <div class="bds-form__group">
+                    <label class="bds-label" for="username">Username</label>
+                    <input class="bds-input" type="text" id="username" name="username" placeholder="Enter your username">
+                </div>
+
+                <div class="bds-form__group">
+                    <label class="bds-label" for="skills">Select Skills</label>
+                    <select class="bds-select" id="skills" name="skills">
+                        <option value="">Choose a skill</option>
+                        <option value="java">Java</option>
+                        <option value="spring">Spring Boot</option>
+                        <option value="javascript">JavaScript</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="bds-button bds-button--secondary">Submit</button>
+            </form>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bds-footer bds-spacing-v-lg">
+            <div class="bds-container">
+                <p class="bds-text bds-text--small">© 2024 MySkillsLab - Built with Bosch Design System</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Bosch Frontend Kit JavaScript -->
+    <script src="js/frontend-kit.js"></script>
+</body>
+</html>

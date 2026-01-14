@@ -100,6 +100,17 @@ Thumbs.db
 .env.test.local
 .env.production.local
 
+# npm configuration with credentials
+.npmrc
+
+# Node modules
+node_modules/
+
+# Large vendor libraries (should be downloaded via npm)
+src/main/resources/static/js/frontend-kit.js
+src/main/resources/static/css/frontend-kit.complete.css
+src/main/resources/static/fonts/
+
 # Application specific
 application-local.properties
 application-dev.properties

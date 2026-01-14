@@ -1,0 +1,31 @@
+{
+  "name": "myskillslab",
+  "version": "1.0.0",
+  "description": "A comprehensive Spring Boot quiz application with a complete web interface for technical questions and assessments.",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run copy-bosch-assets",
+    "copy-bosch-assets": "npm run copy-css && npm run copy-js && npm run copy-fonts",
+    "copy-css": "mkdir -p src/main/resources/static/css && cp node_modules/@bosch/frontend.kit-npm/dist/styles/frontend-kit.complete.css src/main/resources/static/css/",
+    "copy-js": "mkdir -p src/main/resources/static/js && cp node_modules/@bosch/frontend.kit-npm/dist/frontend-kit.js src/main/resources/static/js/",
+    "copy-fonts": "mkdir -p src/main/resources/static/fonts && cp node_modules/@bosch/frontend.kit-npm/dist/*.woff* src/main/resources/static/fonts/",
+    "clean": "rm -rf src/main/resources/static/css/frontend-kit.* src/main/resources/static/js/frontend-kit.* src/main/resources/static/fonts/bosch*",
+    "dev": "npm run build && echo 'Frontend assets copied to src/main/resources/static/'",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mariyaLyapova/myskillslab.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/mariyaLyapova/myskillslab/issues"
+  },
+  "homepage": "https://github.com/mariyaLyapova/myskillslab#readme",
+  "dependencies": {
+    "@bosch/frontend.kit-npm": "4.2.0"
+  }
+}

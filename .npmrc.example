@@ -1,0 +1,53 @@
+# MySkillsLab - npm Configuration Example
+# Copy this file to .npmrc and configure with your credentials
+
+# BDC Cloud Artifactory Configuration
+registry=https://rb-artifactory.bosch.com/artifactory/api/npm/bdc-npm-virtual/
+
+# Alternative: Bosch DevCloud Artifactory (lab-specific)
+# registry=https://artifactory.boschdevcloud.com/artifactory/api/npm/lab000089-npm-release-local/
+
+# Scoped packages configuration
+# BDC packages (Bosch Design System)
+@bdc:registry=https://rb-artifactory.bosch.com/artifactory/api/npm/bdc-npm-virtual/
+
+# Bosch packages (e.g., @bosch/frontend.kit-npm, @bosch/bdds.tokens-npm)
+# Note: @bosch packages may be available in both registries depending on your access
+@bosch:registry=https://rb-artifactory.bosch.com/artifactory/api/npm/bdc-npm-virtual/
+# Alternative for DevCloud lab-specific @bosch packages:
+# @bosch:registry=https://artifactory.boschdevcloud.com/artifactory/api/npm/lab000089-npm-release-local/
+
+# Authentication (replace with your actual credentials)
+//rb-artifactory.bosch.com/artifactory/api/npm/bdc-npm-virtual/:_authToken=YOUR_NPM_TOKEN_HERE
+# For DevCloud Artifactory (if using alternative registry):
+# //artifactory.boschdevcloud.com/artifactory/api/npm/lab000089-npm-release-local/:_authToken=YOUR_TOKEN_HERE
+
+# Security settings for corporate environment
+strict-ssl=true
+ca=null
+
+# Package installation behavior
+save=true
+save-exact=true
+package-lock=true
+
+# Disable npm funding and audit messages (common in corporate environments)
+fund=false
+audit=false
+
+# Progress and logging
+progress=true
+loglevel=info
+
+# Proxy settings (uncomment if needed in corporate environment)
+# proxy=http://proxy.bosch.com:8080
+# https-proxy=http://proxy.bosch.com:8080
+
+# Common Bosch packages you can install:
+# npm install @bosch/frontend.kit-npm@4.2.0    # Frontend Kit with Bosch UI Components
+# npm install @bosch/bdds.tokens-npm           # Bosch Design System tokens
+# npm install @bdc/*                           # Various BDC packages
+
+# Note: The following settings have been removed as they are deprecated:
+# - registry-timeout (will be removed in future npm versions)
+# - cache-min (use --prefer-offline flag instead)
